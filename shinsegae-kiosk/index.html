@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>키오스크 프로토타입</title>
+<link rel="stylesheet" href="css/kiosk.css">
+</head>
+<body>
+<!-- 프로토타입 도구줄(디자인 바깥 영역) -->
+<div id="chrome">
+  <div class="ttl">신세계 백화점 키오스크 <small>2521×1776 · <span id="curName"></span></small></div>
+  <div id="legend" style="display:none">
+    <span><i class="lg g"></i> Figma 연결</span>
+    <span><i class="lg o"></i> Figma에 없는 보완 기능</span>
+    <span><i class="lg r"></i> 연결 화면 없음</span>
+  </div>
+  <button class="tool" id="btnBack" title="이전 화면으로">←<span class="lbl"> 이전</span></button>
+  <button class="tool" id="btnFlows" title="플로우 바로가기 목록을 열고 닫습니다">☰<span class="lbl"> 플로우</span></button>
+  <button class="tool" id="btnLinks" title="클릭 가능한 연결을 표시합니다">연결 표시</button>
+  <button class="tool" id="btnStart" title="언제든 시작 화면으로 돌아갑니다">⌂<span class="lbl"> 시작 화면으로</span></button>
+</div>
+<aside id="flows" aria-label="플로우 바로가기">
+  <div class="fh"><span class="fhT">Flows</span><button id="flowClose" type="button" aria-label="닫기">✕</button></div>
+  <div id="flowList"></div>
+  <div class="ff">Figma 프로토타입의 시작점과 같습니다. 누르면 해당 흐름의 첫 화면으로 이동합니다.</div>
+</aside>
+<div id="flowDim" aria-hidden="true"></div>
+<div id="wrap"><div id="scaler">
+  <main id="stage"></main>
+  <div id="toast"></div>
+</div></div>
+<script src="js/flows.js"></script>
+<script src="js/kiosk.js"></script>
+<script src="js/overlays.js"></script>
+<script src="js/enhance.js"></script>
+<script src="js/kenh.js"></script>
+<script src="js/kswipe.js"></script>
+<script src="js/kmap.js"></script>
+<script src="js/imgsizes.js"></script>
+<script src="js/kres.js"></script>
+<script>window.FLOWCFG = { wide: 1280, rail: 720 };</script>
+<script src="js/flowpanel.js"></script>
+<script>window.HOVER_SEL = '#stage [data-go],#stage [data-act],#stage [data-todo],#stage [data-ui]:not([data-ui=dayhl]):not([data-ui=in]),#stage .kopt,#stage [data-ui=kkey],#stage [data-ui=mapbtn]';</script>
+<script src="js/hover.js"></script>
+</body>
+</html>

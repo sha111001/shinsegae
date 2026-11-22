@@ -1,0 +1,180 @@
+/* 신세계 백화점 키오스크 프로토타입 (2521×1776, 키오스크 기기 포함) */
+/* Figma 사용 글꼴 (사용 글자만 담은 경량 파일) */
+@font-face{font-family:"Noto Sans KR";font-weight:300;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-300.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans KR";font-weight:400;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-400.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans KR";font-weight:500;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-500.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans KR";font-weight:600;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-600.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans KR";font-weight:700;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-700.woff2) format("woff2")}
+@font-face{font-family:"Noto Sans KR";font-weight:800;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSansKR-800.woff2) format("woff2")}
+@font-face{font-family:"Arita Buri KR";font-weight:600;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSerifKR-600.woff2) format("woff2")}
+@font-face{font-family:"Arita Buri KR";font-weight:700;font-style:normal;font-display:swap;src:url(../assets/fonts/NotoSerifKR-700.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:swap;src:url(../assets/fonts/Inter-600.woff2) format("woff2")}
+@font-face{font-family:"Inria Serif";font-weight:300;font-style:normal;font-display:swap;src:url(../assets/fonts/InriaSerif-300.woff2) format("woff2")}
+@font-face{font-family:"Inria Serif";font-weight:400;font-style:normal;font-display:swap;src:url(../assets/fonts/InriaSerif-400.woff2) format("woff2")}
+@font-face{font-family:"Inria Serif";font-weight:700;font-style:normal;font-display:swap;src:url(../assets/fonts/InriaSerif-700.woff2) format("woff2")}
+@font-face{font-family:"Pretendard Variable";font-weight:45 920;font-style:normal;font-display:swap;
+  src:url("../assets/fonts/PretendardVariable.woff2") format("woff2-variations")}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:#dfe3e8;overflow:hidden;
+  -webkit-font-smoothing:antialiased;color:#111}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+
+/* ---------- 도구줄 ---------- */
+#chrome{position:fixed;left:0;right:0;top:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 16px;background:#fff;border-bottom:1px solid #d9dee5;z-index:50;font-size:13px}
+#chrome .ttl{font-weight:700;font-size:14px;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#chrome .ttl small{font-weight:500;color:#8a94a0;margin-left:6px;font-size:12px}
+#legend{display:flex;gap:10px;font-size:11px;color:#555;align-items:center}
+.lg{display:inline-block;width:12px;height:12px;vertical-align:-2px;border:2px solid #17a34a}.lg.o{border:2px dashed #f08c00}.lg.r{border:2px dotted #e03131}
+.tool{height:34px;padding:0 13px;border:1px solid #c9d1db;border-radius:8px;background:#fff;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none;color:#111}
+.tool:hover{background:#e3f0ff;border-color:#0a6cff;color:#0a5fe0}
+.tool.on{background:#0a6cff;border-color:#0a6cff;color:#fff}
+
+/* ---------- Flows 패널 ---------- */
+#flows{position:fixed;left:0;top:52px;bottom:0;width:240px;background:#2c2c2c;color:#fff;z-index:40;display:flex;flex-direction:column}
+body.flowsHidden #flows{display:none}
+#flows .fh{display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 10px 0 16px;border-bottom:1px solid #3d3d3d;font-size:13px;font-weight:700}
+#flows .fh button{width:30px;height:30px;border-radius:6px;color:#ddd;font-size:16px}
+#flows .fh button:hover{background:#0a6cff;color:#fff}
+#flowList{flex:1;overflow-y:auto;padding:10px 8px}
+#flowList button{display:flex;align-items:center;gap:10px;width:100%;height:36px;padding:0 10px;border-radius:6px;color:#e6e6e6;font-size:12.5px;text-align:left}
+#flowList button i{width:12px;font-style:normal;font-size:12px;visibility:hidden}
+#flowList button.on{color:#fff;font-weight:700}
+#flowList button.on i{visibility:visible}
+#flowList button:hover{background:#0a6cff;color:#fff}
+#flows .ff{padding:12px 16px;border-top:1px solid #3d3d3d;font-size:11px;line-height:16px;color:#9a9a9a}
+/* ---------- Flows 패널 반응형 ----------
+   넓은 화면: 펼친 패널(창 폭에 따라 200~240px)이 무대를 밀어냄
+   중간 화면: 번호만 있는 얇은 띠(56px) → 마우스를 올리거나 ☰ 를 누르면 무대 위로 펼쳐짐
+   좁은 화면: 숨김 → ☰ 를 누르면 서랍처럼 열리고 바깥을 누르면 닫힘 */
+:root{--fw:clamp(200px,15vw,240px)}
+#flows{width:var(--fw);transition:width .18s ease,transform .22s ease,box-shadow .18s}
+#wrap{left:var(--fw);transition:left .18s ease}
+body.flowsHidden #wrap{left:0!important}
+#flowList button .no{display:none;width:28px;height:28px;border-radius:50%;flex:none;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#3d3d3d;color:#ddd}
+#flowList button.on .no{background:#0a6cff;color:#fff}
+#flowList button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#flowDim{display:none;position:fixed;inset:52px 0 0 0;background:rgba(0,0,0,.35);z-index:39}
+
+/* 중간: 얇은 띠 */
+body.fl-rail #wrap{left:56px}
+body.fl-rail #flows{width:56px;overflow:hidden}
+body.fl-rail:not(.fl-open) #flows:not(:hover) .fhT,
+body.fl-rail:not(.fl-open) #flows:not(:hover) .fh button,
+body.fl-rail:not(.fl-open) #flows:not(:hover) .ff,
+body.fl-rail:not(.fl-open) #flows:not(:hover) #flowList i,
+body.fl-rail:not(.fl-open) #flows:not(:hover) #flowList span{display:none}
+body.fl-rail:not(.fl-open) #flows:not(:hover) .fh{justify-content:center;padding:0}
+body.fl-rail:not(.fl-open) #flows:not(:hover) .fh::after{content:"☰";font-size:16px;color:#bbb}
+body.fl-rail:not(.fl-open) #flows:not(:hover) #flowList{padding:10px 6px}
+body.fl-rail:not(.fl-open) #flows:not(:hover) #flowList button{justify-content:center;padding:0;height:40px}
+body.fl-rail:not(.fl-open) #flows:not(:hover) #flowList .no{display:flex}
+body.fl-rail #flows:hover,body.fl-rail.fl-open #flows{width:240px;box-shadow:8px 0 24px rgba(0,0,0,.35);transition-delay:.12s}
+body.fl-rail.fl-open #flows{transition-delay:0s}
+
+/* 좁은: 서랍 */
+body.fl-drawer #wrap{left:0}
+body.fl-drawer #flows{width:min(260px,82vw);transform:translateX(-102%)}
+body.fl-drawer.fl-open #flows{transform:none;box-shadow:8px 0 24px rgba(0,0,0,.35)}
+body.fl-drawer.fl-open #flowDim{display:block}
+#flowList button{min-height:36px}
+
+/* ---------- 무대 ---------- */
+#wrap{position:fixed;left:240px;right:0;top:52px;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+body.flowsHidden #wrap{left:0}
+#scaler{position:relative;width:2521px;height:1776px;flex:none;transform-origin:center center}
+#stage{position:absolute;inset:0;background:#000;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.pg{position:absolute;inset:0;overflow:hidden}
+.pg.in{animation:fade .18s ease-out}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.pg .head{position:absolute;left:0;top:0;width:2521px;height:1776px;z-index:5}
+.pg .body{position:absolute;left:0;width:1920px;overflow-y:auto;overflow-x:hidden;z-index:1;scrollbar-width:thin}
+.pg .body>.in{position:relative;width:1920px}
+.pg .fixed{position:absolute;inset:0;z-index:6}
+
+/* ---------- Figma 변환 요소 ---------- */
+.b,.t,.t1,.l,.v{position:absolute}
+.t,.t1{display:flex;flex-direction:column}
+.t1>span{white-space:nowrap}
+.t{word-break:keep-all;overflow-wrap:anywhere}
+.v{overflow:visible}
+.l{display:block}
+
+/* ---------- 클릭 가능한 요소: 파란색 호버 ---------- */
+[data-go],[data-act],[data-todo],.ui,[data-ui]:not([data-ui=dayhl]){cursor:pointer}
+/* ---------- 파란색 호버 (곱하기 덮개: 흰 배경 이미지도 티 나지 않음 / 선은 원래 상자 있는 요소만) ---------- */
+.hv:hover::after{content:"";position:absolute;inset:0;border-radius:var(--hvr,6px);background:#cfe2ff;mix-blend-mode:multiply;pointer-events:none;z-index:60}
+.hv.bx:hover{outline:2px solid rgba(0,112,255,.75);outline-offset:1px}
+.hv.fx:hover::after{display:none}
+.hv.fx:hover{filter:var(--f) drop-shadow(0 0 7px rgba(0,112,255,.75))!important}
+svg[data-go]:hover,svg[data-act]:hover,svg[data-todo]:hover,svg[data-ui]:hover{filter:drop-shadow(0 0 3px rgba(0,112,255,.9))}
+.links [data-go]{outline:3px solid #17a34a;outline-offset:-2px}
+.links [data-go][data-u],.links [data-act][data-u]{outline:3px dashed #f08c00}
+.links [data-ui]:not([data-ui=dayhl]):not([data-go]){outline:2px dashed #f08c00;outline-offset:-1px}
+.links [data-todo]{outline:3px dotted #e03131;outline-offset:-2px}
+
+/* ---------- 보완 UI (Figma 스타일 유지) ---------- */
+.inp-real{position:absolute;border:0;outline:0;background:transparent;font-size:inherit;color:#111}
+.inp-real::placeholder{color:#999}
+.on-blue{background:#0066b3!important;color:#fff!important}
+#gnb2{position:absolute;left:0;width:1920px;z-index:20;box-shadow:0 12px 24px rgba(0,0,0,.08)}
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:30}
+.modal{position:absolute;background:#fff;border-radius:16px;z-index:31;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+#toast{position:absolute;left:0;right:0;bottom:60px;display:flex;justify-content:center;pointer-events:none;z-index:60}
+#toast div{background:rgba(25,31,40,.94);color:#fff;font-size:22px;line-height:1.45;padding:16px 28px;border-radius:16px;text-align:center;max-width:900px;animation:fade .15s}
+#toast small{display:block;color:#9ecbff;font-size:17px;margin-bottom:3px;font-weight:600}
+.drop{position:absolute;background:#fff;border:1px solid #d9d9d9;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.12);z-index:25;padding:6px 0;font-size:16px}
+.drop button{display:block;width:100%;padding:10px 16px;text-align:left}
+.drop button:hover{background:#e8f2ff;color:#0a5fe0}
+
+/* 좁은 화면: 제목 숨기고 버튼은 아이콘만 → 시작 화면 버튼이 항상 보이게 */
+@media (max-width:640px){#chrome{gap:6px;padding:0 8px}#chrome .ttl,#legend{display:none!important}.tool{padding:0 9px;font-size:12px}.tool .lbl{display:none}#chrome .tool:first-of-type{margin-left:auto}#chrome{justify-content:flex-end}}
+
+/* ---------- 키오스크 전용 ---------- */
+body{background:#1b1d21}
+#wrap{background:#1b1d21}
+.kov{position:absolute;z-index:40;filter:drop-shadow(0 8px 18px rgba(0,0,0,.25))}
+.kov .b,.kov .t,.kov .t1,.kov .v,.kov .l{position:absolute}
+.kopt{cursor:pointer;border-radius:6px}
+.kopt:hover{background:rgba(0,112,255,.16)}
+.kopt.on{color:#e31f26!important;font-weight:700!important}
+.kclose{position:absolute;width:48px;height:48px;border-radius:24px;background:#fff;border:1px solid #d9d9d9;font-size:22px;color:#333;z-index:30;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+/* 접근성: 디스플레이(가운데 화면 영역)에만 적용 */
+#stage.hc .pg .head > .b:nth-child(n+2){filter:contrast(1.7) saturate(.35) brightness(1.05)}
+#stage.low .pg .head > .b:nth-child(n+2){background:#141414!important;overflow:hidden!important}
+#stage .klow{position:absolute;left:0;top:0;transform:scale(.74)}
+#stage[data-font="크게"] .pg .head > .b:nth-child(n+2) .t,#stage[data-font="크게"] .pg .head > .b:nth-child(n+2) .t1{zoom:1.12}
+#stage[data-font="작게"] .pg .head > .b:nth-child(n+2) .t,#stage[data-font="작게"] .pg .head > .b:nth-child(n+2) .t1{zoom:.9}
+
+.kcaret span::after{content:"";display:inline-block;width:2px;height:1em;background:#e31f26;margin-left:2px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+[data-ui=kkey]{cursor:pointer}
+[data-ui=kkey]:active{filter:brightness(.85)}
+[data-ui=kkey].kon{outline:3px solid #e31f26}
+
+.kkey{cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#111}
+.kkey.alt{background:#e3e6e8}
+.kkey:active{background:rgba(0,0,0,.18)}
+
+/* 버튼 위에 겹친 일반 글자·아이콘은 클릭을 통과시킴(Figma 레이어 순서 때문에 버튼이 눌리지 않던 문제) */
+#stage .t1:not([data-go]):not([data-act]):not([data-todo]):not([data-ui]),#stage .t:not([data-go]):not([data-act]):not([data-todo]):not([data-ui]),#stage svg.v:not([data-go]):not([data-act]):not([data-todo]):not([data-ui]){pointer-events:none}
+#stage [data-big]{z-index:35}
+
+/* 터치·슬라이드 (js/kswipe.js) */
+#stage{touch-action:none;-webkit-user-select:none;user-select:none}
+#stage img{-webkit-user-drag:none}
+#stage .kswipe,#stage [style*="--kscroll"],#stage [style*="overflow-x:auto"]{cursor:grab}
+#stage .kswipe:active,#stage [style*="--kscroll"]:active{cursor:grabbing}
+#stage [data-ui=pager]{cursor:pointer}
+
+/* 검색 결과 없음 (js/kenh.js) */
+#stage .knores{position:absolute;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(255,255,255,.96);pointer-events:none;color:#222;font-size:30px}
+#stage .knores b{font-size:36px;font-weight:700}
+#stage .knores span{font-size:24px;color:#777}
+/* 지도 확대·이동 (js/kmap.js) */
+#stage .kmapbox.zoomed{cursor:grab}
+#stage .kmapbox.zoomed:active{cursor:grabbing}
+#stage .kmapbtn{cursor:pointer}
+/* 매장 데이터가 없는 '매장 찾기' */
+#stage .kdisabled{opacity:.38;filter:grayscale(1);cursor:not-allowed!important}
